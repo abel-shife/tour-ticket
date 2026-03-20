@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Ticket {
+  id            Int       @id @default(autoincrement())
+  serialNumber  String    @unique
+  guardianName  String
+  phoneNumber   String?
+  visitingDate  DateTime?
+  isImmediate   Boolean   @default(false)
+  groupSize     Int
+  amountPaid    Int
+  paymentMethod String
+  status        String    @default("PAID")
+  isUsed        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  scannedAt     DateTime?
+  scannedBy     String?
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String   @default("VOLUNTEER") // "VOLUNTEER" or "ADMIN"
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model VerificationLog {
+  id           Int      @id @default(autoincrement())
+  ticketId     String
+  volunteerId  String
+  timestamp    DateTime @default(now())
+  status       String
+  guardianName String?
+  groupSize    Int?
+}
